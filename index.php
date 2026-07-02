@@ -18,14 +18,14 @@
 <h2>Chess is a game that has been played for centuries, which begs the question...</h2>
 <h2>how unique is each game?</h2>
 	
-<div class="split left">
+<div class="split left centered">
 	<div id="board">
 		<script>
 			var game = new Chess();
 			var board = Chessboard('board', {position: 'start', draggable: true, dropOffBoard: 'snapback', 
 			
 			onDrop: function(source, target, piece, newPos, oldPos, orientation) {
-				if ((orientation == 'white' && target.includes('8')) || (orientation == 'black' && target.includes('1'))) {
+				if ((piece.includes('w') && target.includes('8')) || (piece.includes('b') && target.includes('1'))) {
 					var move = game.move({from: source, to: target, promotion: 'q'});
 				} else {
 					var move = game.move({from: source, to: target});
@@ -34,15 +34,16 @@
 					return 'snapback';
 				}
 				console.log(game.history());
-				board.position(game.fen());
 			},
 			
 			onSnapEnd: function() {
 				board.position(game.fen());
+				document.getElementById("list-of-moves").value = game.history();
 			}
 			
 		}) 
-		</script>	
+		</script>
+		<input type="text" class="move-list" id="list-of-moves" readonly value=""></input>
 	</div>
 	<!-- Needs Fixing! Currently No Pawn Promotion -->
 	<div class="promotion-options">
