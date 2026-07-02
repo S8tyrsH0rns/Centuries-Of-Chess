@@ -18,7 +18,7 @@
 <h2>Chess is a game that has been played for centuries, which begs the question...</h2>
 <h2>how unique is each game?</h2>
 	
-<div class="split left">#
+<div class="split left">
 	<div id="board">
 		<script>
 			var game = new Chess();
@@ -26,19 +26,22 @@
 			
 			onDrop: function(source, target, piece, newPos, oldPos, orientation) {
 				if ((orientation == 'white' && target.includes('8')) || (orientation == 'black' && target.includes('1'))) {
-					const move = game.move({from: source, to: target, promotion: 'q'});
+					var move = game.move({from: source, to: target, promotion: 'q'});
+				} else {
+					var move = game.move({from: source, to: target});
 				}
-				
-				const move = game.move({from: source, to: target});
-				
 				if (move === null) {
 					return 'snapback';
 				}
 				console.log(game.history());
 				board.position(game.fen());
+			},
+			
+			onSnapEnd: function() {
+				board.position(game.fen());
 			}
 			
-			}) 
+		}) 
 		</script>	
 	</div>
 	<!-- Needs Fixing! Currently No Pawn Promotion -->
