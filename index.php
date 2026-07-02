@@ -18,30 +18,50 @@
 <h2>Chess is a game that has been played for centuries, which begs the question...</h2>
 <h2>how unique is each game?</h2>
 	
-<div id="board">
-	<script>
-		var game = new Chess();
-		var board = Chessboard('board', {position: 'start', draggable: true, dropOffBoard: 'snapback', 
-		
-		onDrop: function(source, target, piece, newPos, oldPos, orientation) {
-			if ((orientation == 'white' && target.includes('8')) || (orientation == 'black' && target.includes('1'))) {
-				console.log('promotion')
+<div class="split left">#
+	<div id="board">
+		<script>
+			var game = new Chess();
+			var board = Chessboard('board', {position: 'start', draggable: true, dropOffBoard: 'snapback', 
+			
+			onDrop: function(source, target, piece, newPos, oldPos, orientation) {
+				if ((orientation == 'white' && target.includes('8')) || (orientation == 'black' && target.includes('1'))) {
+					const move = game.move({from: source, to: target, promotion: 'q'});
+				}
+				
+				const move = game.move({from: source, to: target});
+				
+				if (move === null) {
+					return 'snapback';
+				}
+				console.log(game.history());
+				board.position(game.fen());
 			}
 			
-			const move = game.move({from: source, to: target});
-			
-			if (move === null) {
-				return 'snapback';
-			}
-			console.log(game.history());
-			board.position(game.fen());
-		}
-		
-		}) 
-		
-
-	</script>
-	<button onclick="resetBoard()"> ⟳ </button>
+			}) 
+		</script>	
+	</div>
+	<!-- Needs Fixing! Currently No Pawn Promotion -->
+	<div class="promotion-options">
+		<ul class="menu-items">
+			<li class="item">
+			  <button>Queen</button>
+			</li>
+			<li class="item">
+			  <button>Rook</button>
+			</li>
+			<li class="item">
+			  <button>Bishop</button>
+			</li>
+			<li class="item">
+		  <button>Knight</button>
+			</li>
+		</ul>
+	</div>
+</div>
+<div class="split right">
+	<!-- Area for information on past games and button controls for resetting, undoing/redoing -->
+	<button onclick="resetBoard()" class="icon-button"> ⟳ </button>
 </div>
 
 <script>
@@ -51,5 +71,6 @@
 		game = new Chess();
 	}
 </script>
+
 </body>
 </html>
