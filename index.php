@@ -25,7 +25,7 @@
 			var board = Chessboard('board', {position: 'start', draggable: true, dropOffBoard: 'snapback', 
 			
 			onDrop: function(source, target, piece, newPos, oldPos, orientation) {
-				if ((piece.includes('w') && target.includes('8')) || (piece.includes('b') && target.includes('1'))) {
+				if ((piece.includes('wP') && target.includes('8')) || (piece.includes('bP') && target.includes('1'))) {
 					var move = game.move({from: source, to: target, promotion: 'q'});
 				} else {
 					var move = game.move({from: source, to: target});
@@ -43,7 +43,7 @@
 			
 		}) 
 		</script>
-		<input type="text" class="move-list" id="list-of-moves" readonly value=""></input>
+		<input type="text" class="move-list" id="list-of-moves" readonly value="Move history:"></input>
 	</div>
 	<!-- Needs Fixing! Currently No Pawn Promotion -->
 	<div class="promotion-options">
@@ -71,6 +71,7 @@
 <script>
 	function resetBoard(){
 		console.log("Resetting...");
+		document.getElementById("list-of-moves").value = "Move history:";
 		board.start();
 		game = new Chess();
 	}
