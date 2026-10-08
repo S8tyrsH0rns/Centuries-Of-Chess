@@ -54,9 +54,11 @@
 
 	function updateHistory() {
 		var text = "Move history: ";
+		var moveHistory = "";
 		game.history().forEach(function(move, i) {
-			text += move + " ";
+			moveHistory += move + " ";
 		});
+		text += moveHistory;
 		var box = document.getElementById("list-of-moves");
 		box.textContent = text;
 		box.scrollLeft = box.scrollWidth;

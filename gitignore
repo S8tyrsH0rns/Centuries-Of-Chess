@@ -1,0 +1,26 @@
+# Database credentials: never commit these
+config.php
+.env
+
+# Raw chess data and database dumps (large, never served)
+data/
+*.pgn
+*.pgn.zst
+*.sql
+*.dump
+
+# Python (import script)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Logs
+*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
