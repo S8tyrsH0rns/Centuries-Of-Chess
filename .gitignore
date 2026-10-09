@@ -2,14 +2,14 @@
 config.php
 .env
 
-# Raw chess data and database dumps (large, never served)
+# Raw chess data and database dumps
 data/
 *.pgn
 *.pgn.zst
 *.sql
 *.dump
 
-# Python (import script)
+# Python
 __pycache__/
 *.pyc
 .venv/
