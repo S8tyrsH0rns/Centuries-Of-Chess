@@ -13,7 +13,7 @@ body {
 .title-banner {
 	background-color: #0F1B0E;
 	color: #E3DEC3;
-	padding: 0.5em 1em;
+	padding: 1em 2em 3em;
 }
 
 .main {
@@ -45,16 +45,23 @@ body {
 .board-row {
 	display: flex;
 	align-items: flex-start;
+	width: 100%;
+	min-width: 0;
 }
 
 .board-area {
+	padding-top: 2em;
+	width: 100%;
+	min-width: 0;
+	max-width: 44.5em;
+	margin-inline: auto;
 }
 
 #board {
-	padding-top: 1.5em;
-	width: 40em;
+	width: 100%;
+	max-width: 40em;
 	border: 1px solid black;
-	flex-shrink: 0;
+	flex-shrink: 1;
 }
 
 .move-list {
@@ -75,13 +82,14 @@ body {
 	white-space: nowrap;
 	overflow-x: auto;
 	scrollbar-width: thin;
-	scrollbar-color: #E3DEC3; 
+	scrollbar-color: #E3DEC3 transparent; 
 }
 
 .game-controls {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start;
+	align-items: center;
+
 }
 
 .icon-button {
@@ -89,6 +97,7 @@ body {
 	color: #0F1B0E;
 	font-weight: 900;
 	border-radius: 50%;
+	border: none;
 	font-size: 20px;
 	padding: 1em;
 	margin: 10px;
@@ -96,9 +105,47 @@ body {
 
 .promotion-options {
 	display: none;
-	margin: 10px;
 }
 
 .menu-items {
 	list-style: none;
+}
+
+.tab {
+	overflow: hidden;
+	border: 1px solid #414535;
+	background-color: #C4B599;
+}
+
+.tab button {
+	background-color: inherit;
+	color: #0F1B0E;
+	
+	font-family: inherit;
+	font-size: 16px;
+	
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	transition: 0.2s;
+}
+
+.tab button:hover {
+	background-color: #414535;
+	color: #E3DEC3;
+	
+}
+
+.tab button.active {
+	background-color: #414535;
+	color: #E3DEC3;
+	
+}
+
+.tab-contents {
+	display: none;
+	padding-left: 4px;
+	border-top: none;
 }

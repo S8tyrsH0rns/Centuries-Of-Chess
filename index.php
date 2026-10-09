@@ -26,14 +26,14 @@
 				<div id="board"></div>
 				<!-- Area for information on past games -->
 				<div class="game-controls">
-					<button onclick="resetBoard()" class="icon-button"> ⟳ </button>
+					<button onclick="resetBoard()" class="icon-button"> ⟳ </button></li>
 
 					<div class="promotion-options" id="promotion-options">
 						<ul class="menu-items">
-							<li class="item"><button data-piece="q">Queen</button></li>
-							<li class="item"><button data-piece="r">Rook</button></li>
-							<li class="item"><button data-piece="b">Bishop</button></li>
-							<li class="item"><button data-piece="n">Knight</button></li>
+							<li class="item"><button class="icon-button" data-piece="q">♕</button></li>
+							<li class="item"><button class="icon-button" data-piece="r">♖</button></li>
+							<li class="item"><button class="icon-button" data-piece="b">♗</button></li>
+							<li class="item"><button class="icon-button" data-piece="n">♘</button></li>
 						</ul>
 					</div>
 				</div>
@@ -42,9 +42,30 @@
 		</div>
 	</div>
 
+	<!-- The spilt screen on the right displays data about the current played game.  -->
+
 	<div class="split right">
+		<div class="tab">
+			<button class="tab-link" onclick="openTab(event, 'Opening Explorer')">Opening Explorer</button>
+			<button class="tab-link" onclick="openTab(event, 'Statistics')">Statistics </button>
+			<button class="tab-link" onclick="openTab(event, 'Game Database')">Game Database </button>
+		</div>
+		
+		<div id="Opening Explorer" class="tab-contents">
+		
+		</div>
+		
+		<div id="Statistics" class="tab-contents">
+			<p>This is where information about the total number of games will be shownit will mainly comprise of averages calculated from the database.</p>
+		</div>
+		
+		<div id="Game Database" class="tab-contents">
+			<p>This is where the game database will be</p>
+		</div>
 		
 	</div>
+	
+	
 </div>
 
 <script>
@@ -112,6 +133,10 @@
 		onDrop: onDrop,
 		onSnapEnd: onSnapEnd
 	});
+	
+	window.addEventListener('resize', function() {
+    board.resize();
+	});
 
 	document.querySelectorAll('.promotion-options button').forEach(function(button) {
 		button.addEventListener('click', function() {
@@ -132,6 +157,28 @@
 	}
 
 	updateHistory();
+</script>
+
+<script>
+function openTab(evt, tabName) {
+		var i, tabContents, tabLink;
+		
+		//Hide all elements with class="tabContents"
+		tabContents = document.getElementsByClassName("tab-contents");
+		for (i = 0; i < tabContents.length; i++) {
+			tabContents[i].style.display = "none";
+		}
+		
+		//Remove "active" class from all elements with class "tabLink"
+		tabLink = document.getElementsByClassName("tab-link");
+		for (i = 0; i < tabLink.length; i++) {
+			tabLink[i].className = tabLink[i].className.replace(" active", "");
+		}
+		
+		//Show current tab and add "active" class to selected button
+		document.getElementById(tabName).style.display = "block";
+		evt.currentTarget.className += " active";
+	}
 </script>
 
 </body>
