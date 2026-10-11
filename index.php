@@ -26,7 +26,7 @@
 				<div id="board"></div>
 				<!-- Area for information on past games -->
 				<div class="game-controls">
-					<button onclick="resetBoard()" class="icon-button"> ⟳ </button></li>
+					<button onclick="resetBoard()" class="icon-button"> ⟳ </button>
 
 					<div class="promotion-options" id="promotion-options">
 						<ul class="menu-items">
@@ -46,12 +46,12 @@
 
 	<div class="split right">
 		<div class="tab">
-			<button class="tab-link" onclick="openTab(event, 'Opening Explorer')">Opening Explorer</button>
+			<button class="tab-link" onclick="openTab(event, 'Opening-Explorer')">Opening Explorer</button>
 			<button class="tab-link" onclick="openTab(event, 'Statistics')">Statistics </button>
-			<button class="tab-link" onclick="openTab(event, 'Game Database')">Game Database </button>
+			<button class="tab-link" onclick="openTab(event, 'Game-Database')" id="defaultOpen">Game Database </button>
 		</div>
 		
-		<div id="Opening Explorer" class="tab-contents">
+		<div id="Opening-Explorer" class="tab-contents">
 		
 		</div>
 		
@@ -59,7 +59,7 @@
 			<p>This is where information about the total number of games will be shownit will mainly comprise of averages calculated from the database.</p>
 		</div>
 		
-		<div id="Game Database" class="tab-contents">
+		<div id="Game-Database" class="tab-contents">
 			<p>This is where the game database will be</p>
 		</div>
 		
@@ -179,6 +179,8 @@ function openTab(evt, tabName) {
 		document.getElementById(tabName).style.display = "block";
 		evt.currentTarget.className += " active";
 	}
+	
+	document.getElementById("defaultOpen").click();
 </script>
 
 </body>

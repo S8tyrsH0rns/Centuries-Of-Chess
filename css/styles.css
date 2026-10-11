@@ -40,6 +40,7 @@ body {
 /* Control the right side */
 .right {
 	background-color: #414535;
+	color: #E3DEC3;
 }
 
 .board-row {
@@ -66,7 +67,8 @@ body {
 
 .move-list {
 	display: block;
-	width: 40em;
+	width: 100%;
+	max-width: 40em;
 	font-family: inherit;
 	font-size: 16px;
 	background-color: transparent;
