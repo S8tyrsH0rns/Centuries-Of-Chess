@@ -20,11 +20,12 @@
 </div>
 
 <div class="main">
+	<!-- The left side of split screen contains gameplay - including the board, game controls + list of moves made -->
 	<div class="split left centered">
 		<div class="board-area">
 			<div class="board-row">
 				<div id="board"></div>
-				<!-- Area for information on past games -->
+				<!-- Below are the controls for the game, including resetting the board and promotion -->
 				<div class="game-controls">
 					<button onclick="resetBoard()" class="icon-button"> ⟳ </button>
 
@@ -52,14 +53,16 @@
 		</div>
 		
 		<div id="Opening-Explorer" class="tab-contents">
-		
+			<!-- This tab is about future moves, early on this will act as an opening explorer, later on a best move selector -->
 		</div>
 		
 		<div id="Statistics" class="tab-contents">
+			<!-- Information on games as a whole, white win percent/black win percent based on current game state -->
 			<p>This is where information about the total number of games will be shownit will mainly comprise of averages calculated from the database.</p>
 		</div>
 		
 		<div id="Game-Database" class="tab-contents">
+			<!-- Location of database -->
 			<p>This is where the game database will be</p>
 		</div>
 		
@@ -73,6 +76,7 @@
 	var pendingMove = null;
 	var promotionMenu = document.getElementById("promotion-options");
 
+	//Updates the move history tab below the board when a move is made.
 	function updateHistory() {
 		var text = "Move history: ";
 		var moveHistory = "";
@@ -117,6 +121,7 @@
 		}
 	}
 
+	//Function called when player drops a piece
 	function onSnapEnd() {
 		if (pendingMove) {
 			return;
@@ -124,7 +129,8 @@
 		board.position(game.fen());
 		updateHistory();
 	}
-
+	
+	//Board settings
 	var board = Chessboard('board', {
 		position: 'start',
 		draggable: true,
@@ -134,10 +140,12 @@
 		onSnapEnd: onSnapEnd
 	});
 	
+	//Handling resizing the board when the window is resized
 	window.addEventListener('resize', function() {
     board.resize();
 	});
 
+	//Handles promotion for pawn
 	document.querySelectorAll('.promotion-options button').forEach(function(button) {
 		button.addEventListener('click', function() {
 			game.move({from: pendingMove.from, to: pendingMove.to, promotion: this.dataset.piece});
@@ -147,7 +155,7 @@
 			updateHistory();
 		});
 	});
-
+	
 	function resetBoard() {
 		game = new Chess();
 		pendingMove = null;

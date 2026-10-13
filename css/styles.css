@@ -61,7 +61,9 @@ body {
 #board {
 	width: 100%;
 	max-width: 40em;
-	border: 1px solid black;
+	border: 0.5em outset #414535;
+	
+	margin-bottom: 0.8em;
 	flex-shrink: 1;
 }
 
@@ -71,7 +73,7 @@ body {
 	max-width: 40em;
 	font-family: inherit;
 	font-size: 16px;
-	background-color: transparent;
+	background-color: #414535;
 	
 	border: 0.2em solid #E3DEC3;
 	border-radius: 0.4em;
