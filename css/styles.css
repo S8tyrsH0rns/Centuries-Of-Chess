@@ -10,6 +10,10 @@ body {
 	height: 100vh;
 }
 
+p {
+	padding-bottom: 1em;
+}
+
 .title-banner {
 	background-color: #0F1B0E;
 	color: #E3DEC3;
@@ -96,15 +100,28 @@ body {
 
 }
 
+.item {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
 .icon-button {
 	background-color: #C4B599;
 	color: #0F1B0E;
 	font-weight: 900;
 	border-radius: 50%;
-	border: none;
+	border: 0.2em ridge #414535;
 	font-size: 20px;
 	padding: 1em;
 	margin: 10px;
+	
+	transition: 0.1s;
+}
+
+.icon-button:active {
+	background-color: #414535;
+	transform: translateY(0.1em);
 }
 
 .promotion-options {
@@ -150,6 +167,45 @@ body {
 
 .tab-contents {
 	display: none;
-	padding-left: 4px;
+	padding: 1em;
 	border-top: none;
+}
+
+.search-settings {
+	margin-bottom: 0.5em;
+
+}
+
+.game-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#games-body td, th {
+	text-align: center;
+    white-space: pre-line;
+	
+	padding: 0.25em;
+	
+	border: 0.05em solid #0F1B0E;
+	border-collapse: collapse;
+}
+
+#games-body td:nth-child(5) {
+    width: 60%;
+}
+
+.page-controls {
+	margin-top: 1em;
+	max-width: fit-content;
+	margin-left: auto;
+	margin-right: auto;
+	
+}
+
+.page-controls button {
+	padding: 0.5em 1em;
+	
+	margin-left: 1em;
+	margin-right: 1em;
 }

@@ -99,6 +99,8 @@ def convert_to_sql(data):
 
 testName = "lichess_elite_2014-01.pgn"
 
+#This section is used to import mutliple pgn files at once but can be used to add just one
+#Simply set the year range, then the range of months you want to import
 for year in range(2014,2020):
     for month in range(1,13):
         if (month < 10):
