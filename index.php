@@ -60,15 +60,19 @@
 			to a database of previously played games (currently at over 2.1 million games). There are three different ways of looking back
 			at past games: </p>
 			
-			<h4><u>Move Explorer</u></h4>
-			<p>The purpose of the Move Explorer is to show the most popular next move out of all the remaining games, at the start of this game this
-			can act as an Opening Explorer, naming any openings it detects.</p>
+			<div class="subsection">
+				<h4><u>Move Explorer</u></h4>
+				<p>The purpose of the Move Explorer is to show the most popular next move out of all the remaining games, at the start of this game this
+				can act as an Opening Explorer, naming any openings it detects.</p>
+				
+				<h4><u>Statistics</u></h4>
+				<p>The Statistics page shows general statistics of the current game played (such as white/black win rate, average elo for white/black).</p>
+				
+				<h4><u>Game Database</u></h4>
+				<p>This panel shows data on individual games, being able to be sorted by a number of different metrics.</p>
+			</div>
 			
-			<h4><u>Statistics</u></h4>
-			<p>The Statistics page shows general statistics of the current game played (such as white/black win rate, average elo for white/black).</p>
-			
-			<h4><u>Game Database</u></h4>
-			<p>This panel shows data on individual games, being able to be sorted by a number of different metrics.</p>
+			<h3><u>Development and Design</u></h3>
 			
 		</div>
 		
@@ -78,11 +82,14 @@
 		
 		<div id="Statistics" class="tab-contents">
 			<!-- Information on games as a whole, white win percent/black win percent based on current game state -->
-			<p>This is where information about the total number of games will be shown it will mainly comprise of averages calculated from the database.</p>
-			<p>Remaining Games: </p>
-			<p>White/Black Win Rate: </p>
-			<p>Average White Elo/Average Black Elo: </p>
-			<p>Average Game Length: </p>
+			<h3><u>Statistics</u></h3>
+			<p>This panel shows information about all remaining games, giving insight into how a game evolves over time as more moves are made. It is worth noting that these are averages over all remaining games, so as the number of games falls the data will be less accurate.</p>
+			<div class = "statistics-list">
+				<div id="remainingGames"> </div>
+				<div id="winPercentage"> </div>
+				<div id="eloAverages"> </div>
+				<div id="avgGameLength"> </div>
+			</div>
 		</div>
 		
 		<div id="Game-Database-Tab" class="tab-contents">
@@ -155,11 +162,17 @@
 		
 		//Game has changed so data is stale
 		staleGame = true;
+		staleStats = true;
 		currentPage = 1;
 		
 		if ((document.getElementById('Game-Database-Tab').style.display === 'block') && (staleGame == true)) {
 			loadGames();
 		} 
+		
+		if ((document.getElementById('Statistics').style.display === 'block') && (staleStats == true)) {
+			loadStats();
+		} 
+		
 	}
 
 	document.getElementById("list-of-moves").addEventListener("wheel", function(e) {
@@ -270,6 +283,8 @@ function openTab(evt, tabName) {
 		
 		if (tabName === 'Game-Database-Tab' && staleGame) {
 			loadGames();
+		} else if (tabName === 'Statistics' && staleStats) {
+			loadStats();
 		}
 	}
 	
@@ -281,6 +296,7 @@ var currentPage = 1;
 var gameRequestId = 0;
 var staleGame = true;
 
+//Retrieves list 20 games, based on game history, sort method and page number
 async function loadGames() {
 	var requestId = ++gameRequestId;
 	var movesSent = game.history().join(' ');
@@ -302,6 +318,8 @@ async function loadGames() {
 		if (requestId !== gameRequestId) {
 			return;
 		}
+		
+		//StaleGame is set to false as the data has been freshly gathered
 		staleGame = false;
 		renderTable(data);
 		
@@ -341,14 +359,46 @@ function renderTable(data) {
 		const names = row.insertCell();
 		const elo = row.insertCell();
 		const moveCount = row.insertCell();
-		const moves = row.insertCell();
+		const gameMoves = row.insertCell();
 		const result = row.insertCell();
 		
 		year.textContent = gameData.year ?? "-";
 		names.textContent = (gameData.white_name ?? "Unknown") + "\r\n" + (gameData.black_name ?? "Unknown");
 		elo.textContent = (gameData.white_elo ?? "-") + "\r\n" + (gameData.black_elo ?? "-");
 		moveCount.textContent = gameData.move_count;
-		moves.textContent = gameData.moves;
+		
+		
+		const playedMoves = game.history();
+		const rowMoves = (gameData.moves ?? "").trim().split(/\s+/);
+		const moveArray = rowMoves.filter(move => move !== "");
+
+		gameMoves.replaceChildren();
+
+		moveArray.forEach((move, index) => {
+			const span = document.createElement("span");
+			span.textContent = move;
+
+			if (
+				index < playedMoves.length &&
+				move === playedMoves[index]
+			) {
+				span.classList.add("played-move");
+			} 
+			
+			if (index === playedMoves.length - 1 && 
+				move === playedMoves[index]
+			) {
+				span.classList.add("latest-move");
+			} 
+
+			gameMoves.appendChild(span);
+
+			if (index < moveArray.length - 1) {
+				gameMoves.appendChild(document.createTextNode(" "));
+			}
+		});
+
+		//gameMoves.textContent = gameData.moves;
 		
 		switch (gameData.result) {
 			case "b":
@@ -372,19 +422,21 @@ function renderTable(data) {
 
 function updatePage(data) {
 	const pageCounter = document.getElementById('page-label')
+	pageCounter.textContent = 'Page: ' + currentPage;
 	
+	//If on first page, disable the previous page button
 	if (currentPage == 1) {
 		document.getElementById("previous-page").disabled = true;
 	} else {
 			document.getElementById("previous-page").disabled = false;
 		}
+	//If next page doesnt exist, disable next page button
 	if (!data.hasNext) {
 		document.getElementById("next-page").disabled = true;
 	} else {
 			document.getElementById("next-page").disabled = false;
 		}
 		
-	pageCounter.textContent = 'Page: ' + currentPage;
 }
 
 function prevPage() {
@@ -397,8 +449,58 @@ function nextPage() {
 	loadGames();
 }
 
+</script>
+<script>
+var statsRequestId = 1;
+var staleStats = true;
+
+//Similar to loadGames()
+async function loadStats() {
+	var requestId = ++statsRequestId;
+	var movesSentStats = game.history().join(' ');
+	
+	var urlStats = 'stats.php?moves=' + encodeURIComponent(movesSentStats);
+	
+	try {
+		var response = await fetch(urlStats);
+		if (!response.ok) {
+			throw new Error("Error: " + response.status);
+		}
+		
+		var statsData = await response.json();
+		
+		if (requestId !== statsRequestId) {
+			return;
+		}
+		staleStats = false;
+		renderStats(statsData);
+		
+	} catch (err) {
+		if (statsRequestId !== gameRequestId) {
+			return;
+		}
+		console.error(err);
+	}
+	
+}
+
+function renderStats(data) {
+	
+	//Updates text in stats tab
+	document.getElementById("remainingGames").textContent = "Remaining Games: " + data.games.toLocaleString();
+	document.getElementById("winPercentage").textContent = "White/Draw/Black Win Rate: \n" + data.white_wins.toLocaleString() + " / " + (data.games - data.white_wins - data.black_wins).toLocaleString() + " / " + data.black_wins.toLocaleString();
+	if (data.avg_move_count) {
+		document.getElementById("eloAverages").textContent = "Average White Elo/Average Black Elo: \n" + data.avg_white_elo.toLocaleString() + " / " + data.avg_black_elo.toLocaleString();
+		document.getElementById("avgGameLength").textContent = "Average Game Length: " + data.avg_move_count.toLocaleString() + " moves";
+	} else {
+		document.getElementById("eloAverages").textContent = " - / - ";
+		document.getElementById("avgGameLength").textContent = " - ";
+	}
+}
 
 </script>
+
+
 
 </body>
 </html>

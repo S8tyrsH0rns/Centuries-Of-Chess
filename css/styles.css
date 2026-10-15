@@ -171,9 +171,28 @@ p {
 	border-top: none;
 }
 
+.subsection {
+	padding-left: 0.5em;
+}
+
+.statistics-list div {
+	padding: 2.5em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+    white-space: pre-line;
+	
+	font-size: 1.25em;
+}
+
+
 .search-settings {
 	margin-bottom: 0.5em;
+}
 
+.search-settings select {
+	background-color: #E3DEC3;
 }
 
 .game-table {
@@ -193,6 +212,14 @@ p {
 
 #games-body td:nth-child(5) {
     width: 60%;
+}
+
+.played-move {
+	color: #D6B76C;
+}
+
+.latest-move {
+	font-weight: 900;
 }
 
 .page-controls {
