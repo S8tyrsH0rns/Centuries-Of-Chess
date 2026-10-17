@@ -61,4 +61,4 @@ $results = array_slice($rows, 0, PAGE_SIZE);
 $hasNext = count($rows) > PAGE_SIZE;
 
 
-echo json_encode(['prefix' => $prefix, 'sort' => $sortingMethod, 'offset' => $offset, 'results' => $results, 'hasNext' => $hasNext]);
+echo json_encode(['results' => $results, 'hasNext' => $hasNext]);

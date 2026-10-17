@@ -56,20 +56,20 @@
 		<div id="Info-Page" class="tab-contents">
 			<!-- Welcome/information page explaining what the project is and how to use it -->
 			<h3><u>What is Centuries of Chess?</u></h3>
-			<p>Centuries of Chess is a way of visualising the vast number of played chess games by matching the game you play on the board
-			to a database of previously played games (currently at over 2.1 million games). There are three different ways of looking back
-			at past games: </p>
+			<p>Centuries of Chess is an interactive way of visualising the vast number of chess games that have been played throughout history. By matching the moves you play on the board
+			to a database of previously played games (currently at over 2.1 million games), the website allows you to discover how you play compares with those who played in the past.
+			There are three different ways of looking back at past games: </p>
 			
 			<div class="subsection">
 				<h4><u>Move Explorer</u></h4>
-				<p>The purpose of the Move Explorer is to show the most popular next move out of all the remaining games, at the start of this game this
-				can act as an Opening Explorer, naming any openings it detects.</p>
+				<p>The purpose of the Move Explorer is to show the most popular next move among games that match the current moves made by you. It displays how frequently each next move is 
+				played alongside the win count for the games that follow. At the start of this game this can act as an Opening Explorer, naming any openings it detects.</p>
 				
 				<h4><u>Statistics</u></h4>
-				<p>The Statistics page shows general statistics of the current game played (such as white/black win rate, average elo for white/black).</p>
+				<p>The Statistics page shows general statistics of the current game played (such as white/black win rate, average elo for white/black). It gives insight into the level of gameplay for both sides, though the quality of data will degrade as fewer and fewer games exist to pull the data from.</p>
 				
 				<h4><u>Game Database</u></h4>
-				<p>This panel shows data on individual games, being able to be sorted by a number of different metrics.</p>
+				<p>This panel shows a table of data on individual games with results being able to be sorted by things like earliest games or highest ranking elo. It provides the full list of moves for games that match the moves you make so you can follow the exact path of a game. This tab is most useful for looking at specific games, using the sorting filter to find interesting games.</p>
 			</div>
 			
 			<h3><u>Development and Design</u></h3>
@@ -78,6 +78,24 @@
 		
 		<div id="Opening-Explorer-Tab" class="tab-contents">
 			<!-- This tab is about future moves, early on this will act as an opening explorer, later on a best move selector -->
+			<h3><u>Move Explorer: </u></h3>
+			<p>The Move Explorer shows the data for the next possible move, with what percentage of games make each move next and how that affects the win rate for either sides</p>
+			
+			<table class="game-explorer-table">
+				<thead>
+					<tr>
+						<th>Next Move</th>
+						<th>Number of Games</th>
+						<th>Win Count</th>
+						<th>% of Total Games</th>
+					</tr>
+				</thead>
+				<tbody id="game-explorer-body">
+				</tbody>
+			</table>
+			
+			<div id="explorer-loading-message"> </div>
+			
 		</div>
 		
 		<div id="Statistics" class="tab-contents">
@@ -163,6 +181,7 @@
 		//Game has changed so data is stale
 		staleGame = true;
 		staleStats = true;
+		staleExplorer = true;
 		currentPage = 1;
 		
 		if ((document.getElementById('Game-Database-Tab').style.display === 'block') && (staleGame == true)) {
@@ -172,6 +191,10 @@
 		if ((document.getElementById('Statistics').style.display === 'block') && (staleStats == true)) {
 			loadStats();
 		} 
+		
+		if ((document.getElementById('Opening-Explorer-Tab').style.display === 'block') && (staleExplorer == true)) {
+			loadExplorer();
+		}
 		
 	}
 
@@ -285,6 +308,8 @@ function openTab(evt, tabName) {
 			loadGames();
 		} else if (tabName === 'Statistics' && staleStats) {
 			loadStats();
+		} else if (tabName === 'Opening-Explorer-Tab' && staleExplorer) {
+			loadExplorer();
 		}
 	}
 	
@@ -476,7 +501,7 @@ async function loadStats() {
 		renderStats(statsData);
 		
 	} catch (err) {
-		if (statsRequestId !== gameRequestId) {
+		if (requestId !== statsRequestId) {
 			return;
 		}
 		console.error(err);
@@ -500,7 +525,76 @@ function renderStats(data) {
 
 </script>
 
+<script>
+var explorerRequestId = 0;
+var staleExplorer = true;
 
+async function loadExplorer() {
+	var requestId = ++explorerRequestId;
+	var movesSentExplorer = game.history().join(' ');
+	
+	var urlExplorer = 'moveExplorer.php?moves=' + encodeURIComponent(movesSentExplorer);
+	
+	showExplorerMessage("Loading...");
+	
+	try {
+		var response = await fetch(urlExplorer);
+		if (!response.ok) {
+			throw new Error("Error: " + response.status);
+		}
+		
+		var explorerData = await response.json();
+		
+		if (requestId !== explorerRequestId) {
+			return;
+		}
+		staleExplorer = false;
+		renderExplorerTable(explorerData);
+		
+	} catch (err) {
+		if (requestId !== explorerRequestId) {
+			return;
+		}
+		console.error(err);
+	}
+	
+}
+
+function renderExplorerTable(data) {
+	const body = document.getElementById('game-explorer-body');
+	document.getElementById('game-explorer-body').replaceChildren();
+	
+	//Displays warning if no games exist
+	if (data.length === 0) {
+		showExplorerMessage("No Games Found");
+		return;
+	}
+	
+	showExplorerMessage('');
+	
+	
+	data.forEach((entry) => {
+		const row = document.createElement('tr');
+		
+		const next_move = row.insertCell();
+		const numOfGames = row.insertCell();
+		const winRate = row.insertCell();
+		const gamePercent = row.insertCell();
+		
+		next_move.textContent = entry.next_move ?? "-";
+		numOfGames.textContent = entry.games ?? "-";
+		winRate.textContent = entry.white_wins.toLocaleString() + " / " + (entry.games - entry.white_wins - entry.black_wins).toLocaleString() + " / " + entry.black_wins.toLocaleString();
+		gamePercent.textContent = ((entry.games / entry.total) * 100).toLocaleString() + "%";
+		
+		body.appendChild(row);
+	});
+}
+
+function showExplorerMessage(message) {
+	document.getElementById("explorer-loading-message").textContent = message;
+}
+
+</script>
 
 </body>
 </html>

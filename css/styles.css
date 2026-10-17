@@ -175,6 +175,24 @@ p {
 	padding-left: 0.5em;
 }
 
+.game-explorer-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#game-explorer-body td, th {
+	text-align: center;
+    white-space: pre-line;
+	
+	padding: 0.25em;
+	
+	border: 0.05em solid #0F1B0E;
+	border-collapse: collapse;
+}
+
+
+
+
 .statistics-list div {
 	padding: 2.5em;
 	display: flex;
