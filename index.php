@@ -79,7 +79,7 @@
 		<div id="Opening-Explorer-Tab" class="tab-contents">
 			<!-- This tab is about future moves, early on this will act as an opening explorer, later on a best move selector -->
 			<h3><u>Move Explorer: </u></h3>
-			<p>The Move Explorer shows the data for the next possible move, with what percentage of games make each move next and how that affects the win rate for either sides</p>
+			<p>The Move Explorer shows the data for the next possible move, with what percentage of games make each move next and how that affects the win rate for either sides. Click any of the results in the next move tab to make the move on the board.</p>
 			
 			<table class="game-explorer-table">
 				<thead>
@@ -87,14 +87,14 @@
 						<th>Next Move</th>
 						<th>Number of Games</th>
 						<th>Win Count</th>
-						<th>% of Total Games</th>
+						<th>% of Remaining Games</th>
 					</tr>
 				</thead>
 				<tbody id="game-explorer-body">
 				</tbody>
 			</table>
 			
-			<div id="explorer-loading-message"> </div>
+			<div id="explorer-loading-message" class="all-messages"> </div>
 			
 		</div>
 		
@@ -145,7 +145,7 @@
 			</table>
 			
 			<!-- Loading message to appear when database being searched -->
-			<div id="loading-message"> </div>
+			<div id="loading-message" class="all-messages"> </div>
 			
 			<div class="page-controls">
 				<button id="previous-page" onclick="prevPage()" disabled="true">Prev.</button>
@@ -581,17 +581,34 @@ function renderExplorerTable(data) {
 		const winRate = row.insertCell();
 		const gamePercent = row.insertCell();
 		
-		next_move.textContent = entry.next_move ?? "-";
+		//Adds a button to make the specified move
+		const makeMoveButton = document.createElement("button");
+		makeMoveButton.textContent = entry.next_move ?? "-";
+		makeMoveButton.addEventListener('click', () => playMove(entry.next_move));
+		next_move.appendChild(makeMoveButton);
+		
 		numOfGames.textContent = entry.games ?? "-";
 		winRate.textContent = entry.white_wins.toLocaleString() + " / " + (entry.games - entry.white_wins - entry.black_wins).toLocaleString() + " / " + entry.black_wins.toLocaleString();
-		gamePercent.textContent = ((entry.games / entry.total) * 100).toLocaleString() + "%";
+		gamePercent.textContent = ((entry.games / entry.total) * 100).toFixed(1) + "%";
 		
 		body.appendChild(row);
 	});
 }
 
 function showExplorerMessage(message) {
+	document.getElementById('game-explorer-body').replaceChildren();
 	document.getElementById("explorer-loading-message").textContent = message;
+}
+
+function playMove(requestedMove){
+	if (pendingMove || game.game_over()) {
+			return false;
+		}
+	document.getElementById('game-explorer-body').replaceChildren();
+	game.move(requestedMove);
+	board.position(game.fen());
+	updateHistory();
+	
 }
 
 </script>

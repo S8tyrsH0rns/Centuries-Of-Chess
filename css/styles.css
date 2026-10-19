@@ -17,7 +17,7 @@ p {
 .title-banner {
 	background-color: #0F1B0E;
 	color: #E3DEC3;
-	padding: 1em 2em 3em;
+	padding: 2em 2em 3em;
 }
 
 .main {
@@ -171,6 +171,17 @@ p {
 	border-top: none;
 }
 
+.all-messages {
+	padding-top: 2em;
+	padding-bottom: 2em;
+	
+	font-size: 1.5em;
+	
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+}
+
 .subsection {
 	padding-left: 0.5em;
 }
@@ -180,7 +191,7 @@ p {
 	border-collapse: collapse;
 }
 
-#game-explorer-body td, th {
+#game-explorer-body td, th, button {
 	text-align: center;
     white-space: pre-line;
 	
@@ -190,7 +201,24 @@ p {
 	border-collapse: collapse;
 }
 
+#game-explorer-body button {
+	text-align: center;
+	background-color: #414535;
+	color: #E3DEC3;
+	
+	width: 100%;
+	
+	border: none;
+	border-collapse: collapse;
+	cursor: pointer;
+	
+	transition: 0.2s;
+}
 
+#game-explorer-body button:hover {
+	background-color: #E3DEC3;
+	color: #414535;
+}
 
 
 .statistics-list div {
@@ -242,6 +270,8 @@ p {
 
 .page-controls {
 	margin-top: 1em;
+	margin-bottom: 1em;
+	
 	max-width: fit-content;
 	margin-left: auto;
 	margin-right: auto;
