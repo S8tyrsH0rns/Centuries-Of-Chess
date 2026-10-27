@@ -77,7 +77,7 @@
 				<h4><u>Database Design and PGN Parser</u></h4>
 				<p>From the earliest stages of development, I wanted more than just a database of previous games. I realised insight could be gained from looking at the statistics of the players and the outcomes for the games they play. Whilst researching publicly available game collections to use I stumbled upon the Lichess Elite Database, a collection of public games played on the Lichess website.</p>
 				<figure>
-					<img src="img/PGNParser.png" alt="A screenshot of code for parse_elite_file function" width="710" height="617">
+					<img src="img/PGNParser.PNG" alt="A screenshot of code for parse_elite_file function" width="710" height="617">
 					<figcaption>Fig.1 - Code Snippet of parse_elite_file function.</figcaption>
 				</figure>
 				<p> To extract only the data I felt was necessary for the database I wrote a custom Python script to parse the PGN files and transfer relevant data to the database. The parser could parse multiple files from running just once. The database currently contains over 2.1 million games to serve as a proof of concept. I hope to find more data sources to grow the collection of games (particularly older games).</p>
@@ -92,7 +92,7 @@
 			<p>The first representation of data I completed was the game database, where I selected games which had moves LIKE the moves made on the website, the results could be sorted by a variety of different criteria such as the difference between players elo or the earliest game using SQL's ORDER BY parameter. Loading all games from the table which match would be impractical for early games where there are millions of results so I added a page navigation element below the table, limiting each page to a maximum of 20 results and allowing for the SQL query to LIMIT the selection to 21 results (with the 21st result indicating the need for another page of results).</p>
 			
 			<figure>
-					<img src="img/DatabaseConnect.png" alt="Reusable database connect() function shared across database requests" width="710" height="617">
+					<img src="img/DatabaseConnect.PNG" alt="Reusable database connect() function shared across database requests" width="710" height="617">
 					<figcaption>Fig.2 - Reusable database connect() function shared across database requests</figcaption>
 			</figure>
 			

@@ -94,6 +94,10 @@ figcaption {
 	
 	margin-bottom: 0.8em;
 	flex-shrink: 1;
+	
+	touch-action: none;
+	-webkit-user-select: none;
+	user-select: none;
 }
 
 .move-list {
@@ -309,3 +313,49 @@ figcaption {
 	margin-left: 1em;
 	margin-right: 1em;
 }
+
+/*Mobile Layout*/
+
+@media screen and (max-width: 850px) {
+	body {
+		height: auto;
+		min-height: 100vh;
+	}
+	
+	.main {
+		flex-direction: column;
+		flex: 1 0 auto;
+		min-height: 0;
+	}
+	
+	.split {
+		width: 100%;
+		overflow: visible;
+	}
+	
+	.left {
+		flex: 0 0 auto;
+		padding: 0 12px 20px;
+	}
+	
+	.board-area {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    padding-top: 1em;
+    margin: 0;
+	}
+	
+	#board,
+	.move-list	{
+		width: 85%;
+	}
+	
+	.game-controls {
+		padding-left: 1em;
+		flex: 0 0 auto;
+		width: 60px;
+		align-items: center;
+	}
+}
+
