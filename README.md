@@ -9,10 +9,6 @@ It seperates the required information for my website but can easily be changed t
 information.
 
 
-
-
-Color Palette: https://coolors.co/96bbbb-618985-414535-f2e3bc-c19875
-
 Frameworks I used:
 jQuery: https://jquery.com/download/
 
