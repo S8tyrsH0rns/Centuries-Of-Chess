@@ -27,7 +27,8 @@
 				<div id="board"></div>
 				<!-- Below are the controls for the game, including resetting the board and promotion -->
 				<div class="game-controls">
-					<button onclick="resetBoard()" class="icon-button"> ⟳ </button>
+					<button onclick="resetBoard()" class="icon-button" title="Reset Board"> ⟳ </button>
+					<button onclick="undoMove()" class="icon-button" title="Undo Move"> ⤺ </button>
 
 					<div class="promotion-options" id="promotion-options">
 						<ul class="menu-items">
@@ -43,7 +44,7 @@
 		</div>
 	</div>
 
-	<!-- The spilt screen on the right displays data about the current played game.  -->
+	<!-- The split screen on the right displays data about the current played game.  -->
 
 	<div class="split right">
 		<div class="tab">
@@ -56,14 +57,13 @@
 		<div id="Info-Page" class="tab-contents">
 			<!-- Welcome/information page explaining what the project is and how to use it -->
 			<h3><u>What is Centuries of Chess?</u></h3>
-			<p>Centuries of Chess is an interactive way of visualising the vast number of chess games that have been played throughout history. By matching the moves you play on the board
-			to a database of previously played games (currently at over 2.1 million games), the website allows you to discover how you play compares with those who played in the past.
+			<p>Centuries of Chess is an interactive way of visualising the vast amount of chess games that have been played throughout history. The moves you make on the board will be matched against a database of previously recorded games  (currently, over 2.1 million), the website allows you to explore how you play, in comparison to those who played in the past.
 			There are three different ways of looking back at past games: </p>
 			
 			<div class="subsection">
 				<h4><u>Move Explorer</u></h4>
-				<p>The purpose of the Move Explorer is to show the most popular next move among games that match the current moves made by you. It displays how frequently each next move is 
-				played alongside the win count for the games that follow. At the start of this game this can act as an Opening Explorer, naming any openings it detects.</p>
+				<p>The purpose of this tool is to show the most popular following moves based off your current board position. It displays not only how likely the next move is to be
+				played, but also the white/black winrate.</p>
 				
 				<h4><u>Statistics</u></h4>
 				<p>The Statistics page shows general statistics of the current game played (such as white/black win rate, average elo for white/black). It gives insight into the level of gameplay for both sides, though the quality of data will degrade as fewer and fewer games exist to pull the data from.</p>
@@ -73,6 +73,37 @@
 			</div>
 			
 			<h3><u>Development and Design</u></h3>
+			<div class="subsection">
+				<h4><u>Database Design and PGN Parser</u></h4>
+				<p>From the earliest stages of development, I wanted more than just a database of previous games. I realised insight could be gained from looking at the statistics of the players and the outcomes for the games they play. Whilst researching publicly available game collections to use I stumbled upon the Lichess Elite Database, a collection of public games played on the Lichess website.</p>
+				<figure>
+					<img src="img/PGNParser.png" alt="A screenshot of code for parse_elite_file function" width="710" height="617">
+					<figcaption>Fig.1 - Code Snippet of parse_elite_file function.</figcaption>
+				</figure>
+				<p> To extract only the data I felt was necessary for the database I wrote a custom Python script to parse the PGN files and transfer relevant data to the database. The parser could parse multiple files from running just once. The database currently contains over 2.1 million games to serve as a proof of concept. I hope to find more data sources to grow the collection of games (particularly older games).</p>
+			
+			<h4><u>Creating the game</h4></u>
+			<p>To create the board and game pieces I made use of the <a href="https://chessboardjs.com/" target="_blank">chessboard.js</a> library. I chose this library as it is a dedicated way of rendering the board without having to create all the chess elements. The only downside of using this library being that all logic needed to be added separately. To help with creating game logic I also used <a href="https://github.com/jhlywa/chess.js" target="_blank">chess.js</a> to manage game state and validate legal moves. </p>
+			<p>Because the two libraries handle two different responsibilities, I had to implement logic to integrate user interaction and the rules of chess. One example is adding a custom pawn promotion validator which checks to see if a pawn is in the final rank (depending on its colour) and then displays a menu to select which piece to promote to.</p>
+			
+			
+			<h4><u>Extracting data from the table</u></h4>
+			<p>Once I had a playable board and a database to match games filled with data the next step was to turn the stored games into useful information. Each tab shows information in a different way: the Move Explorer highlights trends in the decision making element of the game, the Statistics page finds average information about remaining games, and the Game Database allows you look more in-depth with specific games and their moves.</p>
+			<p>The first representation of data I completed was the game database, where I selected games which had moves LIKE the moves made on the website, the results could be sorted by a variety of different criteria such as the difference between players elo or the earliest game using SQL's ORDER BY parameter. Loading all games from the table which match would be impractical for early games where there are millions of results so I added a page navigation element below the table, limiting each page to a maximum of 20 results and allowing for the SQL query to LIMIT the selection to 21 results (with the 21st result indicating the need for another page of results).</p>
+			
+			<figure>
+					<img src="img/DatabaseConnect.png" alt="Reusable database connect() function shared across database requests" width="710" height="617">
+					<figcaption>Fig.2 - Reusable database connect() function shared across database requests</figcaption>
+			</figure>
+			
+			<p>The next tab I worked on was the Statistics tab, which I improved by separating the database connection script so it can be used for multiple requests, instead of repeating code. The statistics data was fairly simple to SELECT, mainly being count()'s of rows and then calculating averages based on those results.</p>
+			<p>The final tab to be completed was the Move Explorer, which shows the most common next move made by the remaining players in the games that match the board. I found the next move by counting the number of moves have been made and finding the moves made after the most recently played move. It shows how most players make similar moves even when in unfamiliar situations.</p>
+			
+			<h4><u>HTML, CSS and JavaScript</u></h4>
+			<p>The HTML section of this project was relatively simple, this project did however teach me how to interact with a html page using JavaScript, where the tables are dynamically populated once the data gets pulled.</p>
+			<p>As a computer science student, I first found the visual design of the website to be a challenge. I wanted to create a 'split screen' effect for the site, keeping the board accessible even when switching between different representations of the data. I developed my understanding of styling and layout by referring to the MDN Web Docs to build and change to match the desired aesthetic.</p>
+			<p>A majority of the work done on this project was with the JavaScript portion of the project. The JavaScript code covers the actual chess gameplay, the tab switching, each database request and the rendering of the recieved data. It involved state management, only making a database call when a tab is loaded with a 'stale' game and acts as the glue which connects each piece of the site.</p>
+			</div>
 			
 		</div>
 		
@@ -278,6 +309,14 @@
 		pendingMove = null;
 		promotionMenu.style.display = 'none';
 		board.start();
+		updateHistory();
+	}
+	
+	function undoMove() {
+		game.undo();
+		board.position(game.fen());
+		pendingMove = null;
+		promotionMenu.style.display = '';
 		updateHistory();
 	}
 

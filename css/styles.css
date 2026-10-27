@@ -10,9 +10,34 @@ body {
 	height: 100vh;
 }
 
+h3 {
+	padding-top: 1.5em;
+}
+
 p {
 	padding-bottom: 1em;
 }
+
+a {
+	color: #D6B76C;
+}
+
+img {
+	display: block;
+	margin: auto;
+	width: 70%;
+	height: 70%;
+}
+
+figcaption {
+	display: block;
+	margin: auto;
+	width: 70%;
+	height: 70%;
+  
+	padding-bottom: 1.5em;
+}
+
 
 .title-banner {
 	background-color: #0F1B0E;

@@ -5,7 +5,7 @@ $prefix = getPrefix();
 
 //Setting search rules for the database
 const PAGE_SIZE = 20;
-const MAX_PAGE = 1000;
+const MAX_PAGE = 100;
 
 //Validation for the sorting method for the database 
 $sortingMethod = $_GET['sort'] ?? 'elo';
