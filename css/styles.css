@@ -357,5 +357,10 @@ figcaption {
 		width: 60px;
 		align-items: center;
 	}
+	
+	.icon-button {
+		padding: 0.7em;
+		margin: 5px;
+	}
 }
 
